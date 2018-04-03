@@ -19,5 +19,5 @@ Potrebno je izraditi:
    	- [ ] Završno izvješće napisano u obliku istraživačkog rada
 - Usmeno izlaganje cjelokupnog ostvarenja projektnog zadatka [10b]
 Potrebno je izraditi:  
-	-[ ] Prezentaciju (10-15 slajda, trajanje 10 min + 5 min pitanja)  
-	-[ ] Demonstraciju rada programskog ostvarenja (5 min)
+	- [ ] Prezentaciju (10-15 slajda, trajanje 10 min + 5 min pitanja)  
+	- [ ] Demonstraciju rada programskog ostvarenja (5 min)
