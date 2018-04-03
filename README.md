@@ -1,6 +1,12 @@
 # BITbyBIT
 
 ---
+#### Team members:
+
+- Petra Brčić
+- Sandro Lovnički
+
+---
 ### TODO
 - [x] Prijava tima [nužno]
 - Teorijski pristup proučavanju problema projektnog zadatka [15b]
@@ -10,8 +16,8 @@ Potrebno je izraditi:
 - Praktično ostvarenje projektnog zadatka [25b]
 Potrebno je izraditi:
     - [ ] Izvorni kod i dokumentaciju programskog ostvarenja projekta
-    - [ ] Završno izvješće napisano u obliku istraživačkog rada
+   	- [ ] Završno izvješće napisano u obliku istraživačkog rada
 - Usmeno izlaganje cjelokupnog ostvarenja projektnog zadatka [10b]
-Potrebno je izraditi:
-    -[ ] Prezentaciju (10-15 slajda, trajanje 10 min + 5 min pitanja)
-    -[ ] Demonstraciju rada programskog ostvarenja (5 min)
+Potrebno je izraditi:  
+	-[ ] Prezentaciju (10-15 slajda, trajanje 10 min + 5 min pitanja)  
+	-[ ] Demonstraciju rada programskog ostvarenja (5 min)
