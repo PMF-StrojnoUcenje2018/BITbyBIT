@@ -11,8 +11,8 @@
 - [x] Prijava tima [nužno]
 - Teorijski pristup proučavanju problema projektnog zadatka [15b]
 Potrebno je izraditi:
-    - [ ] Projektni prijedlog (do 3-4 stranice A4)
-    - [ ] Kratku prezentaciju (3-4 slajda, trajanje 5min)
+    - [x] Projektni prijedlog (do 3-4 stranice A4)
+    - [x] Kratku prezentaciju (3-4 slajda, trajanje 5min)
 - Praktično ostvarenje projektnog zadatka [25b]
 Potrebno je izraditi:
     - [ ] Izvorni kod i dokumentaciju programskog ostvarenja projekta

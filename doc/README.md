@@ -1,8 +1,8 @@
 # Documentation
 
-This directory will contain all project documentation. See the full detailed list below.
+This directory will contain all project documentation. See the list below.
 
-- [x] project proposal paper in .tex and .pdf
-- [ ] project proposal presentation in .ppt
-- [ ] project paper in .tex and .pdf
-- [ ] project presentation in .ppt
+- [x] project proposal paper in .pdf
+- [x] project proposal presentation in .pptx and .pdf
+- [ ] project paper in .pdf
+- [ ] project presentation in .pptx and .pdf
