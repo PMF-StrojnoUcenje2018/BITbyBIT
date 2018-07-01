@@ -110,7 +110,8 @@ We used that table, specifically \code{kepid} colum to download just the light-c
 Still, our machines are not fully prepared to tackle the preprocessing and learning from such a vast amount of not at all simple data, so we decided to choose randomly just some of the TCEs from table. We ended up selecting $1058$ TCEs labeled as planet candidate, $471$ TCEs labeled as astrophisical false positive and $734$ TCEs labeled as non transit phenomena.
 
 As an example, here is a small table of selected features of one TCE documented for a star with \code{kepid} $5088591$:
-\begin{center}
+\begin{table}[H]
+\centering
   \begin{tabular}{||c | c||} 
     \hline
     kepid & 9517393 \\
@@ -131,7 +132,8 @@ As an example, here is a small table of selected features of one TCE documented 
     \hline
     \ldots & \ldots
   \end{tabular}
-\end{center}
+  \caption{Transposed TCE table with one row}
+\end{table}
 
 \subsection{Preprocessing Lightcurves}
 In order to feed our model, we first need to process the raw light-curve into more useful and compact form. Raw light-curve is loaded as an array of smaller arrays called quarters which represent distinct periods in Kelper telescope's configuration, position, etc. We thus might expect quarters to be on a slightly different scale. In figure~\ref{fig:raw_lc} we show lightcurve for \code{kepid} $5088591$ right after loading \code{time} and \code{flux} arrays.
@@ -141,7 +143,7 @@ In order to feed our model, we first need to process the raw light-curve into mo
 \label{fig:raw_lc}
 \end{figure}
 
-It is easy to see that almost every star has an unpredictable variation in its flux, so the data is pretty distorted and irregular which is something that is to be avoided because it would interfere with our model's conclusions and feature extraction. Thus, we calculate a B-spline over the entire light-curve data, ignoring points that cannot be fitted or are of type \code{None}. This spline can be seen in figure!\ref{fig:raw_spline_lc} colored black.
+It is easy to see that almost every star has an unpredictable variation in its flux, so the data is pretty distorted and irregular which is something that is to be avoided because it would interfere with our model's conclusions and feature extraction. Thus, we calculate a B-spline over the entire light-curve data, ignoring points that cannot be fitted or are of type \code{None}. This spline can be seen in figure~\ref{fig:raw_spline_lc} colored black.
 \begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{splineLC-9517393}
 \caption{Raw light-curve data with fitted B-spline}
@@ -162,7 +164,7 @@ Next, we divide light-curve by the spline to obtain~\ref{fig:divided_lc}. Notice
 \label{fig:divided_lc}
 \end{figure}
 
-We see that the amount of useful data of this "drop" is very poor, but we must remember that those events are periodic by definition so we hope that there is more instances of that same "planet" crossing during the lifetime of Kepler. We find the \code{tce\_period} from TCE table and fold every drop separated by \code{tce\_period} to \code{time0bk}. Now we divide TCE's duration into $201$ discrete points and calculate median value for flux in each of $200$ intervals in between. This results in a much richer, and uniform for all events, representation of a TCE which can be seen in!\ref{fig:folded_tce}. We call that view a "local view" and it is going to be the input of our model.
+We see that the amount of useful data of this "drop" is very poor, but we must remember that those events are periodic by definition so we hope that there is more instances of that same "planet" crossing during the lifetime of Kepler. We find the \code{tce\_period} from TCE table and fold every drop separated by \code{tce\_period} to \code{time0bk}. Now we divide TCE's duration into $201$ discrete points and calculate median value for flux in each of $200$ intervals in between. This results in a much richer, and uniform for all events, representation of a TCE which can be seen in figure~\ref{fig:folded_tce}. We call that view a "local view" and it is going to be the input of our model.
 \begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{localvierLCdrop-9517393}
 \caption{Folded local view of the TCE}
@@ -190,11 +192,11 @@ The full graph of our convolutional neural network viewed in TensorBoard can be 
 \end{figure}
 
 \subsection{Convolutional Layer}
-A convolutional layer consists of neurons that are not fully connected, that is --- each neurons in this layer is connect to just the small portion of the input. The convolution layer’s parameters consist of a set of learnable filters. During the forward pass, we slide (more precisely, convolve) each filter across the input and compute dot products between the entries of the filter and the input at any position. As we slide the filter over the the input, we will produce a $1$-dimensional activation map that gives the responses of that filter at every position. Furthermore, we can stack multiple convolutional layers before pooling their output. One thing to notice here is that there are two options in doing the described procedure; with padding the input and without padding it, meaning that with padding we add zero values to the left or right of the input so the convolution step on the first/last few inputs in the input array will be valid (there will be enough inputs on each side to do the dot product). We use padding, thus are able to obtain same-size output after the convolution. The convolutional kernel size we use is $5$.
+A convolutional layer consists of neurons that are not fully connected, that is --- each neurons in this layer is connect to just the small portion of the input. The convolution layer's parameters consist of a set of learnable filters. During the forward pass, we slide (more precisely, convolve) each filter across the input and compute dot products between the entries of the filter and the input at any position. As we slide the filter over the the input, we will produce a $1$-dimensional activation map that gives the responses of that filter at every position. Furthermore, we can stack multiple convolutional layers before pooling their output. One thing to notice here is that there are two options in doing the described procedure; with padding the input and without padding it, meaning that with padding we add zero values to the left or right of the input so the convolution step on the first/last few inputs in the input array will be valid (there will be enough inputs on each side to do the dot product). We use padding, thus are able to obtain same-size output after the convolution. The convolutional kernel size we use is $5$.
 
 We have a set of $16$ filters in first convolution block and each of them will produce a separate $1$-dimensional activation map. We stack these activation maps along the depth dimension and produce the output. So, for out input representation --- arrays of length $201$ (shape $(?,201)$, where question mark is batch size during training and $1$ during prediction), the output of convolution layer will be of shape $(?,201,16)$. We then feed this data into another convolutional layer with a set of $16$ filters yielding as outputs tensors of shape $(?,201,16)$.
 
-A visualization of what each of $16$ filters is doing with the input 1D array of data can be seen in gifure~\ref{fig:1d_conv} 
+A visualization of what each of $16$ filters is doing with the input 1D array of data can be seen in figure~\ref{fig:1d_conv} 
 \begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{1d_conv}
 \caption{Visualization of 1D convolution}
@@ -204,9 +206,9 @@ A visualization of what each of $16$ filters is doing with the input 1D array of
 Also, there are $32$ filter in the second convolutional block taking as input the output of pooling the outputs of the first convolutional block. The output of this second convolutional layer is the set of features our convolutional blocks have learned and it is then reduced more with maximum pooling, flattened to shape $(?,1472) $and passed to fully connected layers for classification.
 
 \subsection{Rectified Linear Unit}
-For our activation function, we used rectified linear unit (ReLu). It is applied to the dot product of filter and current area the neuron is "looking" at, to produce an output value. One other valid choice for this task would be the sigmoid, but it would not stress enough the importance of larger values.
+For our activation function, we used rectified linear unit (ReLu). It is applied to the dot product of filter weights and current area the filter is "looking" at, to produce an output value. One other valid choice for this task would be the sigmoid, but it would not stress enough the importance of larger values.
 
-To be specific, when our network is trained for $1000$ steps with sigmoid activation function, it only manages to get accuracy of $0.5265$ while with ReLu it goes to $0.9735$ in the same number of steps. Furthermore, sigmoid model has $0$ true positives in the confusion matrix and we present why exactly that is so in the next figure.
+To be specific, when our network is trained for $7000$ steps with sigmoid activation function, it only manages to get accuracy of $0.5265$ while with ReLu it goes to $0.9735$ in the same number of steps. Furthermore, sigmoid model has $0$ true positives in the confusion matrix and we present why exactly that is so in the next figure.
 \begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{sigmoid_pooling2}
 \caption{Output of 32 filters after last pooling before FC (using sigmoid activations)}
@@ -216,7 +218,7 @@ To be specific, when our network is trained for $1000$ steps with sigmoid activa
 As we can see in figure~\ref{fig:sigmoid-pool2}, almost no features are detected and therefore almost every example will be classified as non-transiting phenomena. Notice how vertical scale is pretty much the same and this is because of pretty much the same outputs from sigmoid. We also present the same picture for ReLu.
 \begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{relu_pooling2}
-\caption{CHANGE IT Output of 32 filters after last pooling before FC (using ReLu activations)}
+\caption{Output of 32 filters after last pooling before FC (using ReLu activations)}
 \label{fig:relu-pool2}
 \end{figure}
 
@@ -251,7 +253,7 @@ Lastly, the computations of fully connected layers are sumarized in a single out
 We train a convolutional neural network model on a randomly constructed set of data consisting of $1058$ planet candidates, $471$ astrophysical false positives and $734$ non-transiting phenomena, summing to $2263$ data examples. For this model (convolutional neural network described above), astrophysical false positives and non-transiting phenomena are both mapped to label $0$ and planet candidates are labeled $1$. 
 
 \subsection{Parameters}
-We shuffle the data and partition it into a training set consisting of $1810$ examples, a validation set of $226$ examples and a test set of $227$ examples. Training is done with batch size of $16$, in two main parts; first we train for $3000$ steps with learning rate $10^{-5}$, and then we try to fine tune the accuracy with learning rate $10^{-6}$ for another $1000$ steps. Optimization in both parts is done with Adam optimizer.
+We shuffle the data and partition it into a training set consisting of $1810$ examples, a validation set of $226$ examples and a test set of $227$ examples. Training is done with batch size of $16$, in two main parts; first we train for $6000$ steps with learning rate $10^{-5}$, and then we try to fine tune the accuracy with learning rate $10^{-6}$ for another $1000$ steps. Optimization in both parts is done with Adam optimizer.
 
 \subsection{Progress}
 The training process for parameters described above can be most easily viewed through TensorBoard interface for visualizing computation graph and its execution. 
